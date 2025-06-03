@@ -1,10 +1,12 @@
 import {Plugin} from "@esbuild";
 
-export const transformScriptTags : Plugin = {
+const transformScriptTags : (
+  options? : {readTextFileSync: (path: string | URL) => string}
+) => Plugin = (options = {readTextFileSync: Deno.readTextFileSync}) => ({
   name: 'transform-script-tags',
   setup(build) {
     build.onLoad({filter: /\.html$/}, (args) => {
-      const htmlIn = Deno.readTextFileSync(args.path)
+      const htmlIn = options.readTextFileSync(args.path)
       
       const htmlOut = htmlIn.replace(
         /(?<=<script.*src=")(.*)(?=">)/gm,
@@ -19,4 +21,6 @@ export const transformScriptTags : Plugin = {
       }
     })
   }
-}
+})
+
+export default transformScriptTags;
