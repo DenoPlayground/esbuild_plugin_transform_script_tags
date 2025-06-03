@@ -15,7 +15,7 @@ interface Options {
  */
 const transformScriptTags : (options? : Options) => Plugin = (options = {readTextFileSync: Deno.readTextFileSync}) => ({
   name: 'transform-script-tags',
-  setup(build) {
+  setup(build) : void | Promise<void> {
     build.onLoad({filter: /\.html$/}, (args) => {
       const htmlIn = options.readTextFileSync(args.path)
       
